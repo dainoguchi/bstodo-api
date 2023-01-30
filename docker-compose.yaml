@@ -6,13 +6,8 @@ services:
       dockerfile: Dockerfile
       args:
         - target=dev
-    environment:
-      PORT: 8080
-      DB_NAME: bstodo
-      DB_PASS: password
-      DB_USER: postgres
-      DB_HOST: db
-      DB_PORT: 5432
+    env_file:
+      - .env.local
     volumes:
       - .:/app
     ports:
@@ -27,7 +22,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "5432"
+      - "5432:5432"
 
 volumes:
   db_data:
