@@ -6,6 +6,15 @@
 - (一応)slackのtech-pj-account-githubにメンション
 - okならmerge
 
+# 開発環境 setup
+
+```shell
+$ touch .env.local
+$ make build
+$ make up
+```
+- .env.localの値は.env.sample参照
+
 ## 使う予定の外部ライブラリ
 - chi
   - ルーター
