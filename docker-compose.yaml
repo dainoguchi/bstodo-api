@@ -7,11 +7,11 @@ services:
       args:
         - target=dev
     env_file:
-      - .env.local
+      - .env
     volumes:
       - .:/app
     ports:
-      - "8080:8080"
+      - "${PORT}:8080"
 
   db:
     image: postgres:14-alpine
