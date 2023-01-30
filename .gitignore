@@ -16,7 +16,7 @@
 ###############
 
 # env files
-../tmp/.env.local
+.env.local
 .env.prod
 
 # airで生成されるバイナリが配置されるpath
