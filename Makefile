@@ -1,7 +1,7 @@
-PHONY: build
+.PHONY: build
 build:
 	docker compose build --no-cache
 
-PHONY: up
+.PHONY: up
 up:
 	docker compose up -d
