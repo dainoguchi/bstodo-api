@@ -1,3 +1,11 @@
+# 開発手順
+- jiraにチケット作る
+- feature/チケットに対応したbranch作成
+- レビュワー指定してpull request
+  - templateに沿って記入
+- (一応)slackのtech-pj-account-githubにメンション
+- okならmerge
+
 ## 使う予定の外部ライブラリ
 - chi
   - ルーター
