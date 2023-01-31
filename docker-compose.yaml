@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - target=dev
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "${PORT}:8080"
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: bstodo
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  db_data:
