@@ -10,8 +10,7 @@
 
 ```shell
 $ touch .env
-$ make build
-$ make up
+$ make init
 ```
 - .env.sampleの値を.envにコピー
 - .envを書き換える
