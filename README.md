@@ -22,9 +22,8 @@ $ make up
   - 多分なんでもいい
 - [sqlc](https://github.com/kyleconroy/sqlc) or gorm
     - sqlcは渋川さんがお気に入りと仰られて居たので使ってみたい,,,
-- golang-migrate
+- [golang-migrate](https://github.com/golang-migrate/migrate)
   - マイグレーション
-  - 多分なんでもいい
 - [github.com/caarlos0/env](https://github.com/caarlos0/env)
   - 環境変数読み込み
 - air
