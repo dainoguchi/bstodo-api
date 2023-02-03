@@ -2,23 +2,19 @@ package main
 
 import (
 	"fmt"
+	"github.com/dainoguchi/bstodo-api/config"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatalln("環境変数読み込めてない!", port)
-	}
-
+	cfg, _ := config.New()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello World! update")
+		fmt.Fprintln(w, "Hello World!")
 	})
 
-	log.Printf("listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	log.Printf("listening on port %d", cfg.Port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), nil); err != nil {
 		log.Fatal(err)
 	}
 }
