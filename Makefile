@@ -24,3 +24,6 @@ mgcreate:
 mgup:
 	migrate -path db/migrations -database "$(DB_URL)" up
 
+.PHONY: mgdown
+mgdown:
+	migrate -path db/migrations -database "$(DB_URL)" down
