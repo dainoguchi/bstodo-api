@@ -1,6 +1,6 @@
 package config
 
-import "github.com/caarlos0/env/v6"
+import "github.com/caarlos0/env/v7"
 
 type config struct {
 	Port   int    `env:"PORT" envDefault:"8080"`
