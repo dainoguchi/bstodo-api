@@ -1,8 +1,8 @@
 -- user1がownerのプロジェクトにuser2が参加しtodoを共有する
 
 -- 初期値の設定
-INSERT INTO priorities ("priority") VALUES ('high'), ('mid'), ('low');
-INSERT INTO user_roles ("role") VALUES ('editor'), ('admin');
+INSERT INTO priorities ("name") VALUES ('high'), ('mid'), ('low');
+INSERT INTO roles ("role") VALUES ('editor'), ('admin');
 
 -- user1, user2, user3を作成
 INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('1535c2ec-16e4-467d-8120-8ed642bbf7e7', 'user1','user1','user1@gmail.com');
