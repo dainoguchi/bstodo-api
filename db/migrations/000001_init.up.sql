@@ -16,7 +16,7 @@ CREATE TABLE "todos" (
                          "description" varchar,
                          "done" bool NOT NULL DEFAULT false,
                          "priority" varchar(20) NOT NULL DEFAULT 'mid',
-                         "due_date" timestamptz,
+                         "due_date" date,
                          "project_id" uuid NOT NULL,
                          "user_id" uuid NOT NULL,
                          "created_at" timestamptz NOT NULL DEFAULT 'now()',
