@@ -5,9 +5,9 @@ INSERT INTO priorities ("name") VALUES ('high'), ('mid'), ('low');
 INSERT INTO roles ("role") VALUES ('editor'), ('admin');
 
 -- user1, user2, user3を作成
-INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('1535c2ec-16e4-467d-8120-8ed642bbf7e7', 'user1','user1','user1@gmail.com');
-INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('2535c2ec-16e4-467d-8120-8ed642bbf7e7', 'user2','user2','user2@gmail.com');
-INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('3535c2ec-16e4-467d-8120-8ed642bbf7e7', 'user3','user3','user3@gmail.com');
+INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('1535c2ec-16e4-467d-8120-8ed642bbf7e7', 'auth0|01a11f28aacda01526480ddc','user1','user1@gmail.com');
+INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('2535c2ec-16e4-467d-8120-8ed642bbf7e7', 'auth0|02a11f28aacda01526480ddc','user2','user2@gmail.com');
+INSERT INTO users ("id", "auth0_id", "name", "email") VALUES ('3535c2ec-16e4-467d-8120-8ed642bbf7e7', 'google-oauth2|032852562224003772841','user3','user3@gmail.com');
 
 -- user1がproject1を作成 = project1のオーナーがuser1
 INSERT INTO projects("id", "name", "invitation_token", "owner_id") VALUES ('d125b07b-9479-4adb-ab5d-1ac5cf8d27f8', 'project1', 'token', '1535c2ec-16e4-467d-8120-8ed642bbf7e7');
