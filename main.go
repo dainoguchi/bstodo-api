@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -21,8 +22,22 @@ func main() {
 
 func run(ctx context.Context) error {
 	cfg, _ := config.New()
+	jst, err := time.LoadLocation(cfg.DBTZ)
+	if err != nil {
+		log.Fatal()
+	}
 
-	db, err := postgres.New()
+	dsnConfig := postgres.DSNConfig{
+		Host:     cfg.DBHost,
+		User:     cfg.DBUser,
+		Password: cfg.DBPass,
+		DbName:   cfg.DBName,
+		Port:     cfg.DBPort,
+		SslMode:  false,
+		Loc:      jst,
+	}
+
+	db, err := postgres.New(dsnConfig)
 	if err != nil {
 		log.Fatal(err)
 	}

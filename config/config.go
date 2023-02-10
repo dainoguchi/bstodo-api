@@ -9,6 +9,7 @@ type Config struct {
 	DBPass string `env:"DB_PASS" envDefault:"password"`
 	DBUser string `env:"DB_USER" envDefault:"postgres"`
 	DBHost string `env:"DB_HOST" envDefafult:"127.0.0.1"`
+	DBTZ   string `env:"DB_TZ"   envDefafult:"Asia/Tokyo"`
 }
 
 func New() (*Config, error) {
