@@ -1,4 +1,5 @@
 # Jira
+https://buysell-tech.atlassian.net/browse/AC-328
 
 # 要件
 # やったこと
