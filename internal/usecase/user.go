@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"database/sql"
-	"github.com/dainoguchi/bstodo-api/entity"
+	"github.com/dainoguchi/bstodo-api/internal/entity"
 )
 
 type UserUsecase interface {

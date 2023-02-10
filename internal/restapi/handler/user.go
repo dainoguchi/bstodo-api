@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/dainoguchi/bstodo-api/usecase"
+	"github.com/dainoguchi/bstodo-api/internal/usecase"
 	"log"
 	"net/http"
 )
