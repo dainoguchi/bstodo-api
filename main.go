@@ -31,9 +31,9 @@ func run(ctx context.Context) error {
 		Host:     cfg.DBHost,
 		User:     cfg.DBUser,
 		Password: cfg.DBPass,
-		DbName:   cfg.DBName,
+		DBName:   cfg.DBName,
 		Port:     cfg.DBPort,
-		SslMode:  false,
+		SSLMode:  false,
 		Loc:      jst,
 	}
 

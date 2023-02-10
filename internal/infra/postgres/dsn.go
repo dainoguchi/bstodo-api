@@ -15,9 +15,9 @@ type DSNConfig struct {
 	Host     string
 	User     string
 	Password string
-	DbName   string
+	DBName   string
 	Port     int
-	SslMode  bool
+	SSLMode  bool
 	Loc      *time.Location
 }
 
@@ -39,15 +39,15 @@ func (cfg *DSNConfig) FormatDSN() string {
 		buf.WriteString(fmt.Sprintf("password=%s ", cfg.Password))
 	}
 
-	if len(cfg.DbName) > 0 {
-		buf.WriteString(fmt.Sprintf("dbname=%s ", cfg.DbName))
+	if len(cfg.DBName) > 0 {
+		buf.WriteString(fmt.Sprintf("dbname=%s ", cfg.DBName))
 	}
 
 	if cfg.Port != 0 {
 		buf.WriteString(fmt.Sprintf("port=%d ", cfg.Port))
 	}
 
-	if !cfg.SslMode {
+	if !cfg.SSLMode {
 		buf.WriteString(fmt.Sprintf("sslmode=%s ", disabledSslModeString))
 	}
 
