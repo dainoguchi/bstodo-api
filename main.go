@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/dainoguchi/bstodo-api/internal/config"
+	"github.com/dainoguchi/bstodo-api/internal/infra/auth0"
 	"github.com/dainoguchi/bstodo-api/internal/infra/postgres"
 	"github.com/dainoguchi/bstodo-api/internal/restapi/handler"
 	"github.com/dainoguchi/bstodo-api/internal/restapi/middleware"
@@ -44,11 +45,11 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
-	e := NewRouter(db)
+	e := NewRouter(cfg, db)
 	return e.Start(fmt.Sprintf(":%d", cfg.Port))
 }
 
-func NewRouter(db *sql.DB) *echo.Echo {
+func NewRouter(cfg *config.Config, db *sql.DB) *echo.Echo {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 
@@ -60,10 +61,13 @@ func NewRouter(db *sql.DB) *echo.Echo {
 	uh := handler.NewUserHandler(usecase.NewUserUsecase(db))
 	e.GET("/user", uh.GetByID)
 
-	am := middleware.NewAuthMiddleware()
+	jv := auth0.NewJwtValidator(cfg.Auth0Domain, cfg.Auth0Audience)
+	am := middleware.NewAuthMiddleware(jv)
+
+	e.Use(am.EnsureValidToken)
 	e.GET("/api/private", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello world")
-	}, am.EnsureValidToken)
+	})
 
 	return e
 }
