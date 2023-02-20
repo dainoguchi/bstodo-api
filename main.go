@@ -5,8 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/dainoguchi/bstodo-api/internal/config"
-	postgres "github.com/dainoguchi/bstodo-api/internal/infra/postgres"
+	"github.com/dainoguchi/bstodo-api/internal/infra/postgres"
 	"github.com/dainoguchi/bstodo-api/internal/restapi/handler"
+	"github.com/dainoguchi/bstodo-api/internal/restapi/middleware"
 	"github.com/dainoguchi/bstodo-api/internal/usecase"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -58,6 +59,11 @@ func NewRouter(db *sql.DB) *echo.Echo {
 	// 試しにuser１件取得するのみ
 	uh := handler.NewUserHandler(usecase.NewUserUsecase(db))
 	e.GET("/user", uh.GetByID)
+
+	am := middleware.NewAuthMiddleware()
+	e.GET("/api/private", func(c echo.Context) error {
+		return c.String(http.StatusOK, "hello world")
+	}, echo.WrapMiddleware(am.EnsureValidToken))
 
 	return e
 }
