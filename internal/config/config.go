@@ -10,6 +10,9 @@ type Config struct {
 	DBUser string `env:"DB_USER" envDefault:"postgres"`
 	DBHost string `env:"DB_HOST" envDefafult:"127.0.0.1"`
 	DBTZ   string `env:"DB_TZ"   envDefafult:"Asia/Tokyo"`
+
+	Auth0Domain   string `env:"AUTH0_DOMAIN"`
+	Auth0Audience string `env:"AUTH0_AUDIENCE"`
 }
 
 func New() (*Config, error) {
