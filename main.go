@@ -63,7 +63,7 @@ func NewRouter(db *sql.DB) *echo.Echo {
 	am := middleware.NewAuthMiddleware()
 	e.GET("/api/private", func(c echo.Context) error {
 		return c.String(http.StatusOK, "hello world")
-	}, echo.WrapMiddleware(am.EnsureValidToken))
+	}, am.EnsureValidToken)
 
 	return e
 }
