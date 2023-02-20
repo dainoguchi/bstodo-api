@@ -1,9 +1,8 @@
 package handler
 
 import (
-	"encoding/json"
 	"github.com/dainoguchi/bstodo-api/internal/usecase"
-	"log"
+	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
@@ -17,18 +16,18 @@ func NewUserHandler(usecase usecase.UserUsecase) *UserHandler {
 	return &UserHandler{usecase: usecase}
 }
 
-func (h *UserHandler) GetByID(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
+func (h *UserHandler) GetByID(c echo.Context) error {
+	ctx := c.Request().Context()
 
 	user, _ := h.usecase.GetByID(ctx, "1")
 
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-
-		log.Println(err)
-		return
+	type response struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
 	}
 
-	w.WriteHeader(http.StatusOK)
-	return
+	return c.JSON(http.StatusOK, response{
+		ID:   user.ID,
+		Name: user.Name,
+	})
 }

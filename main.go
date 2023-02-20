@@ -8,7 +8,8 @@ import (
 	postgres "github.com/dainoguchi/bstodo-api/internal/infra/postgres"
 	"github.com/dainoguchi/bstodo-api/internal/restapi/handler"
 	"github.com/dainoguchi/bstodo-api/internal/usecase"
-	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
 	"time"
@@ -42,21 +43,33 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
-	router := NewRouter(db)
-
-	return http.ListenAndServe(fmt.Sprintf(":%d", cfg.Port), router)
+	e := NewRouter(db)
+	return e.Start(fmt.Sprintf(":%d", cfg.Port))
 }
 
-func NewRouter(db *sql.DB) http.Handler {
-	router := chi.NewRouter()
+func NewRouter(db *sql.DB) *echo.Echo {
+	e := echo.New()
+	e.Validator = &CustomValidator{validator: validator.New()}
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello World!")
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello World!")
 	})
 
 	// 試しにuser１件取得するのみ
 	uh := handler.NewUserHandler(usecase.NewUserUsecase(db))
-	router.HandleFunc("/user", uh.GetByID)
+	e.GET("/user", uh.GetByID)
 
-	return router
+	return e
+}
+
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		// Optionally, you could return the error to give each route more control over the status code
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
 }
