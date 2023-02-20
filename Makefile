@@ -3,7 +3,6 @@ include .env
 .PHONY: init
 init:
 	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-	go install github.com/kyleconroy/sqlc/cmd/sqlc@v1.16.0 # m1でlatest動かなかった為
 	make build
 	make up
 
