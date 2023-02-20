@@ -3,63 +3,27 @@ package middleware
 import (
 	"context"
 	"fmt"
-	"github.com/auth0/go-jwt-middleware/v2/jwks"
-	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"github.com/dainoguchi/bstodo-api/internal/infra/auth0"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
-	"net/url"
-	"os"
 	"strings"
-	"time"
 )
 
 type AuthMiddleware interface {
 	EnsureValidToken(next echo.HandlerFunc) echo.HandlerFunc
 }
 
-type authMiddleware struct{}
-
-func NewAuthMiddleware() AuthMiddleware {
-	return &authMiddleware{}
+type authMiddleware struct {
+	jwtValidator auth0.JwtValidator
 }
 
-// CustomClaims contains custom data we want from the token.
-type CustomClaims struct {
-	Scope string `json:"scope"`
-}
-
-// Validate does nothing for this example, but we need
-// it to satisfy validator.CustomClaims interface.
-func (c CustomClaims) Validate(ctx context.Context) error {
-	return nil
+func NewAuthMiddleware(jwtValidator auth0.JwtValidator) AuthMiddleware {
+	return &authMiddleware{jwtValidator: jwtValidator}
 }
 
 // EnsureValidToken is a middleware that will check the validity of our JWT.
 func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFunc {
-	issuerURL, err := url.Parse("https://" + os.Getenv("AUTH0_DOMAIN") + "/")
-	if err != nil {
-		log.Fatalf("Failed to parse the issuer url: %v", err)
-	}
-
-	provider := jwks.NewCachingProvider(issuerURL, 5*time.Minute)
-
-	// parserの本体。jwtValidator.ValidateTokenにtoken渡すとauth0の公開鍵拾ってきて検証するっぽい
-	jwtValidator, err := validator.New(
-		provider.KeyFunc,
-		validator.RS256,
-		issuerURL.String(),
-		[]string{os.Getenv("AUTH0_AUDIENCE")},
-		validator.WithCustomClaims(
-			func() validator.CustomClaims {
-				return &CustomClaims{}
-			},
-		),
-		validator.WithAllowedClockSkew(time.Minute),
-	)
-	if err != nil {
-		log.Fatalf("Failed to set up the jwt validator")
-	}
 
 	// echoに書き換え
 	return func(c echo.Context) error {
@@ -75,7 +39,7 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 
 		// 取得したtokenをvalidatorに渡す
 		// 本当は外部から注入したい
-		token, err := jwtValidator.ValidateToken(ctx, authHeaders[1])
+		token, err := a.jwtValidator.ValidateToken(ctx, authHeaders[1])
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid jwt token. %s", err.Error()))
 		}
