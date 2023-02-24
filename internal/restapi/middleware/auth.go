@@ -29,7 +29,7 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 
 		authHeaders := strings.Split(authorization, " ")
 		if len(authHeaders) != 2 {
-			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid authorization header, should format `Bearer code`, but got %s\n", authHeaders))
+			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid authorization header, should format `Bearer code`"))
 		}
 
 		ctx := c.Request().Context()
