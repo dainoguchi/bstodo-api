@@ -12,6 +12,7 @@ import (
 	"github.com/dainoguchi/bstodo-api/internal/usecase"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"log"
 	"net/http"
 	"time"
@@ -51,6 +52,9 @@ func run(ctx context.Context) error {
 
 func NewRouter(cfg *config.Config, db *sql.DB) *echo.Echo {
 	e := echo.New()
+
+	e.Use(echomiddleware.Recover())
+	e.Use(echomiddleware.CORS())
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	e.GET("/", func(c echo.Context) error {
