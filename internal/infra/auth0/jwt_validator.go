@@ -24,6 +24,21 @@ func NewJwtValidator(auth0domain string, auth0audience string) JwtValidator {
 	return &jwtValidator{auth0domain: auth0domain, auth0audience: auth0audience}
 }
 
+// validator.ValidatedTokenに対応
+type JwtToken struct {
+	RegisteredClaims RegisteredClaims
+}
+
+type RegisteredClaims struct {
+	Issuer    string   `json:"iss,omitempty"`
+	Subject   string   `json:"sub,omitempty"`
+	Audience  []string `json:"aud,omitempty"`
+	Expiry    int64    `json:"exp,omitempty"`
+	NotBefore int64    `json:"nbf,omitempty"`
+	IssuedAt  int64    `json:"iat,omitempty"`
+	ID        string   `json:"jti,omitempty"`
+}
+
 func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (*JwtToken, error) {
 	issuerURL, err := url.Parse("https://" + jv.auth0domain + "/")
 	if err != nil {
@@ -68,21 +83,4 @@ func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (
 			ID:        token.RegisteredClaims.ID,
 		},
 	}, nil
-}
-
-// validator.ValidatedTokenに対応
-type JwtToken struct {
-	RegisteredClaims RegisteredClaims
-	// 今回は使わなさそう
-	//CustomClaims CustomClaims
-}
-
-type RegisteredClaims struct {
-	Issuer    string   `json:"iss,omitempty"`
-	Subject   string   `json:"sub,omitempty"`
-	Audience  []string `json:"aud,omitempty"`
-	Expiry    int64    `json:"exp,omitempty"`
-	NotBefore int64    `json:"nbf,omitempty"`
-	IssuedAt  int64    `json:"iat,omitempty"`
-	ID        string   `json:"jti,omitempty"`
 }
