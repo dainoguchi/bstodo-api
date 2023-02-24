@@ -53,3 +53,13 @@ type Auth0IDContextKey struct{}
 func setAuth0ID(ctx context.Context, auth0ID string) context.Context {
 	return context.WithValue(ctx, Auth0IDContextKey{}, auth0ID)
 }
+
+func getAuth0ID(ctx context.Context, auth0ID string) string {
+	v := ctx.Value(Auth0IDContextKey{})
+	auth0ID, ok := v.(string)
+	if !ok {
+		return ""
+	}
+
+	return auth0ID
+}
