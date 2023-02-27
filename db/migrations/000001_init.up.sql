@@ -16,7 +16,7 @@ CREATE TABLE "todos" (
                          "description" varchar,
                          "done" bool NOT NULL DEFAULT false,
                          "priority" varchar(20) NOT NULL DEFAULT 'mid',
-                         "due_date" date,
+--                          "due_date" date,
                          "project_id" uuid NOT NULL,
                          "user_id" uuid NOT NULL,
                          "created_at" timestamptz NOT NULL DEFAULT 'now()',
@@ -34,31 +34,25 @@ CREATE TABLE "projects" (
                             "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
                             "owner_id" uuid NOT NULL,
                             "name" varchar(40) UNIQUE NOT NULL,
-                            "invitation_token" varchar(40) UNIQUE NOT NULL,
+--                             "invitation_token" varchar(40) UNIQUE NOT NULL,
                             "created_at" timestamptz NOT NULL DEFAULT 'now()',
                             "updated_at" timestamptz NOT NULL DEFAULT 'now()'
 );
 
-CREATE TABLE "project_users" (
-                                 "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-                                 "project_id" uuid NOT NULL,
-                                 "user_id" uuid NOT NULL,
-                                 "role" varchar(20) NOT NULL DEFAULT 'editor',
-                                 "created_at" timestamptz NOT NULL DEFAULT 'now()',
-                                 "updated_at" timestamptz NOT NULL DEFAULT 'now()'
-);
-
-CREATE TABLE "roles" (
-                         "role" varchar(20) PRIMARY KEY,
-                         "created_at" timestamptz NOT NULL DEFAULT 'now()',
-                         "updated_at" timestamptz NOT NULL DEFAULT 'now()'
-);
-
-CREATE UNIQUE INDEX ON "project_users" ("project_id", "user_id");
-
-ALTER TABLE "project_users" ADD FOREIGN KEY ("project_id") REFERENCES "projects" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE "project_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- CREATE TABLE "project_users" (
+--                                  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--                                  "project_id" uuid NOT NULL,
+--                                  "user_id" uuid NOT NULL,
+--                                  "role" varchar(20) NOT NULL DEFAULT 'editor',
+--                                  "created_at" timestamptz NOT NULL DEFAULT 'now()',
+--                                  "updated_at" timestamptz NOT NULL DEFAULT 'now()'
+-- );
+--
+-- CREATE TABLE "roles" (
+--                          "role" varchar(20) PRIMARY KEY,
+--                          "created_at" timestamptz NOT NULL DEFAULT 'now()',
+--                          "updated_at" timestamptz NOT NULL DEFAULT 'now()'
+-- );
 
 ALTER TABLE "todos" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -66,8 +60,16 @@ ALTER TABLE "todos" ADD FOREIGN KEY ("project_id") REFERENCES "projects" ("id") 
 
 ALTER TABLE "projects" ADD FOREIGN KEY ("owner_id") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
-ALTER TABLE "project_users" ADD FOREIGN KEY ("role") REFERENCES "roles" ("role") ON DELETE SET NULL ON UPDATE CASCADE;
-
 ALTER TABLE "todos" ADD FOREIGN KEY ("priority") REFERENCES "priorities" ("name") ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+-- CREATE UNIQUE INDEX ON "project_users" ("project_id", "user_id");
+
+-- ALTER TABLE "project_users" ADD FOREIGN KEY ("project_id") REFERENCES "projects" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
+--
+-- ALTER TABLE "project_users" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+
+-- ALTER TABLE "project_users" ADD FOREIGN KEY ("role") REFERENCES "roles" ("role") ON DELETE SET NULL ON UPDATE CASCADE;
 
 COMMIT;

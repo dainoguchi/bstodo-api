@@ -12,6 +12,11 @@ CREATE TRIGGER update_trigger
 
 CREATE TRIGGER update_trigger
     AFTER UPDATE
+    ON priorities
+    FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
+
+CREATE TRIGGER update_trigger
+    AFTER UPDATE
     ON projects
     FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
 
@@ -20,17 +25,13 @@ CREATE TRIGGER update_trigger
     ON users
     FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
 
-CREATE TRIGGER update_trigger
-    AFTER UPDATE
-    ON project_users
-    FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
-
-CREATE TRIGGER update_trigger
-    AFTER UPDATE
-    ON roles
-    FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
-
-CREATE TRIGGER update_trigger
-    AFTER UPDATE
-    ON priorities
-    FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
+-- CREATE TRIGGER update_trigger
+--     AFTER UPDATE
+--     ON project_users
+--     FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
+--
+-- CREATE TRIGGER update_trigger
+--     AFTER UPDATE
+--     ON roles
+--     FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
+--
