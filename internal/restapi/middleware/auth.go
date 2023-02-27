@@ -32,10 +32,15 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid authorization header, should format `Bearer code`"))
 		}
 
+		bearer, rawToken := authHeaders[0], authHeaders[1]
+		if bearer != "Bearer" {
+			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid authorization header, should format `Bearer code`"))
+		}
+
 		ctx := c.Request().Context()
 
 		// jwtトークンをパースし、auth0.JwtToken型の変数を返す
-		token, err := a.jwtValidator.ValidateToken(ctx, authHeaders[1])
+		token, err := a.jwtValidator.ValidateToken(ctx, rawToken)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid jwt token. %s", err.Error()))
 		}
