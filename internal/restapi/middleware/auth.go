@@ -40,7 +40,7 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid jwt token. %s", err.Error()))
 		}
 
-		ctx = setAuth0ID(ctx, token.RegisteredClaims.Subject)
+		ctx = SetAuth0ID(ctx, token.RegisteredClaims.Subject)
 		c.SetRequest(c.Request().WithContext(ctx))
 
 		return next(c)
@@ -50,11 +50,11 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 // with value の keyは空構造体が良いらしい
 type Auth0IDContextKey struct{}
 
-func setAuth0ID(ctx context.Context, auth0ID string) context.Context {
+func SetAuth0ID(ctx context.Context, auth0ID string) context.Context {
 	return context.WithValue(ctx, Auth0IDContextKey{}, auth0ID)
 }
 
-func getAuth0ID(ctx context.Context, auth0ID string) string {
+func GetAuth0ID(ctx context.Context, auth0ID string) string {
 	v := ctx.Value(Auth0IDContextKey{})
 	auth0ID, ok := v.(string)
 	if !ok {
