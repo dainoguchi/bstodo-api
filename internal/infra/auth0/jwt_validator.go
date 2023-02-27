@@ -72,7 +72,6 @@ func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (
 	}
 
 	// ライブラリ依存をなくす為独自定義型に詰め替える
-	// 中身ほ一緒
 	return &JWTToken{
 		RegisteredClaims: RegisteredClaims{
 			Issuer:    token.RegisteredClaims.Issuer,
