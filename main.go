@@ -5,11 +5,14 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/dainoguchi/bstodo-api/internal/config"
-	postgres "github.com/dainoguchi/bstodo-api/internal/infra/postgres"
+	"github.com/dainoguchi/bstodo-api/internal/infra/auth0"
+	"github.com/dainoguchi/bstodo-api/internal/infra/postgres"
 	"github.com/dainoguchi/bstodo-api/internal/restapi/handler"
+	"github.com/dainoguchi/bstodo-api/internal/restapi/middleware"
 	"github.com/dainoguchi/bstodo-api/internal/usecase"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
+	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"log"
 	"net/http"
 	"time"
@@ -43,12 +46,15 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
-	e := NewRouter(db)
+	e := NewRouter(cfg, db)
 	return e.Start(fmt.Sprintf(":%d", cfg.Port))
 }
 
-func NewRouter(db *sql.DB) *echo.Echo {
+func NewRouter(cfg *config.Config, db *sql.DB) *echo.Echo {
 	e := echo.New()
+
+	e.Use(echomiddleware.Recover())
+	e.Use(echomiddleware.CORS())
 	e.Validator = &CustomValidator{validator: validator.New()}
 
 	e.GET("/", func(c echo.Context) error {
@@ -58,6 +64,14 @@ func NewRouter(db *sql.DB) *echo.Echo {
 	// 試しにuser１件取得するのみ
 	uh := handler.NewUserHandler(usecase.NewUserUsecase(db))
 	e.GET("/user", uh.GetByID)
+
+	jv := auth0.NewJWTValidator(cfg.Auth0Domain, cfg.Auth0Audience)
+	am := middleware.NewAuthMiddleware(jv)
+
+	e.Use(am.EnsureValidToken)
+	e.GET("/api/private", func(c echo.Context) error {
+		return c.String(http.StatusOK, "hello world")
+	})
 
 	return e
 }
