@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"context"
 	"fmt"
 	"github.com/dainoguchi/bstodo-api/internal/infra/auth0"
+	"github.com/dainoguchi/bstodo-api/internal/restapi/httputil"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strings"
@@ -45,26 +45,9 @@ func (a *authMiddleware) EnsureValidToken(next echo.HandlerFunc) echo.HandlerFun
 			return echo.NewHTTPError(http.StatusUnauthorized, fmt.Sprintf("Invalid jwt token. %s", err.Error()))
 		}
 
-		ctx = SetAuth0ID(ctx, token.RegisteredClaims.Subject)
+		ctx = httputil.SetAuth0ID(ctx, token.RegisteredClaims.Subject)
 		c.SetRequest(c.Request().WithContext(ctx))
 
 		return next(c)
 	}
-}
-
-// with value の keyは空構造体が良いらしい
-type Auth0IDContextKey struct{}
-
-func SetAuth0ID(ctx context.Context, auth0ID string) context.Context {
-	return context.WithValue(ctx, Auth0IDContextKey{}, auth0ID)
-}
-
-func GetAuth0ID(ctx context.Context, auth0ID string) string {
-	v := ctx.Value(Auth0IDContextKey{})
-	auth0ID, ok := v.(string)
-	if !ok {
-		return ""
-	}
-
-	return auth0ID
 }
