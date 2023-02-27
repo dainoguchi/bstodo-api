@@ -68,7 +68,7 @@ func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (
 
 	token, ok := rawToken.(*validator.ValidatedClaims)
 	if !ok {
-		return nil, fmt.Errorf("%w", errors.New("validate token error, cant cast to validator.ValidatedClaims"))
+		return nil, fmt.Errorf("%w", errors.New("validate token error, couldn't cast to *validator.ValidatedClaims"))
 	}
 
 	// ライブラリ依存をなくす為独自定義型に詰め替える
