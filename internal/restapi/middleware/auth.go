@@ -14,10 +14,10 @@ type AuthMiddleware interface {
 }
 
 type authMiddleware struct {
-	jwtValidator auth0.JwtValidator
+	jwtValidator auth0.JWTValidator
 }
 
-func NewAuthMiddleware(jwtValidator auth0.JwtValidator) AuthMiddleware {
+func NewAuthMiddleware(jwtValidator auth0.JWTValidator) AuthMiddleware {
 	return &authMiddleware{jwtValidator: jwtValidator}
 }
 

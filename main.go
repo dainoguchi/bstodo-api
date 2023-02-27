@@ -65,7 +65,7 @@ func NewRouter(cfg *config.Config, db *sql.DB) *echo.Echo {
 	uh := handler.NewUserHandler(usecase.NewUserUsecase(db))
 	e.GET("/user", uh.GetByID)
 
-	jv := auth0.NewJwtValidator(cfg.Auth0Domain, cfg.Auth0Audience)
+	jv := auth0.NewJWTValidator(cfg.Auth0Domain, cfg.Auth0Audience)
 	am := middleware.NewAuthMiddleware(jv)
 
 	e.Use(am.EnsureValidToken)

@@ -11,8 +11,8 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 )
 
-type JwtValidator interface {
-	ValidateToken(context.Context, string) (*JwtToken, error)
+type JWTValidator interface {
+	ValidateToken(context.Context, string) (*JWTToken, error)
 }
 
 // jwt-validatorのラップ構造体
@@ -21,12 +21,12 @@ type jwtValidator struct {
 	auth0domain, auth0audience string
 }
 
-func NewJwtValidator(auth0domain string, auth0audience string) JwtValidator {
+func NewJWTValidator(auth0domain string, auth0audience string) JWTValidator {
 	return &jwtValidator{auth0domain: auth0domain, auth0audience: auth0audience}
 }
 
 // validator.ValidatedTokenに対応
-type JwtToken struct {
+type JWTToken struct {
 	RegisteredClaims RegisteredClaims
 }
 
@@ -40,7 +40,7 @@ type RegisteredClaims struct {
 	ID        string   `json:"jti,omitempty"`
 }
 
-func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (*JwtToken, error) {
+func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (*JWTToken, error) {
 	issuerURL, err := url.Parse("https://" + jv.auth0domain + "/")
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (jv *jwtValidator) ValidateToken(ctx context.Context, tokenString string) (
 
 	// ライブラリ依存をなくす為独自定義型に詰め替える
 	// 中身ほ一緒
-	return &JwtToken{
+	return &JWTToken{
 		RegisteredClaims: RegisteredClaims{
 			Issuer:    token.RegisteredClaims.Issuer,
 			Subject:   token.RegisteredClaims.Subject,
