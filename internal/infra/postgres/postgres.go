@@ -1,18 +1,19 @@
 package postgres
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v4"
 )
 
-func New(dsnConfig DSNConfig) (*sql.DB, error) {
-	conn, err := sql.Open("postgres", dsnConfig.FormatDSN())
+func New(dsnConfig DSNConfig) (*pgx.Conn, error) {
+	ctx := context.Background()
+	conn, err := pgx.Connect(ctx, dsnConfig.FormatDSN())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create db conn: %s", err.Error())
 	}
 
-	if err := conn.Ping(); err != nil {
+	if err := conn.Ping(ctx); err != nil {
 		return nil, fmt.Errorf("failed to ping: %v", err)
 	}
 
