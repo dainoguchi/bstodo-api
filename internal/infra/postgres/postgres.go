@@ -1,20 +1,34 @@
 package postgres
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 )
 
-func New(dsnConfig DSNConfig) (*sql.DB, error) {
-	conn, err := sql.Open("postgres", dsnConfig.FormatDSN())
+func New(dsnConfig DSNConfig) (*pgx.Conn, error) {
+	ctx := context.Background()
+	conn, err := pgx.Connect(ctx, dsnConfig.FormatDSN())
 	if err != nil {
 		return nil, fmt.Errorf("failed to create db conn: %s", err.Error())
 	}
 
-	if err := conn.Ping(); err != nil {
+	if err := conn.Ping(ctx); err != nil {
 		return nil, fmt.Errorf("failed to ping: %v", err)
 	}
 
 	return conn, nil
 }
+
+type PgxWrapper interface {
+	Begin(ctx context.Context) (pgx.Tx, error)
+	Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error)
+	Query(ctx context.Context, sql string, optionsAndArgs ...interface{}) (pgx.Rows, error)
+	QueryRow(ctx context.Context, sql string, optionsAndArgs ...interface{}) pgx.Row
+}
+
+var (
+	_ PgxWrapper = (*pgx.Conn)(nil)
+	_ PgxWrapper = (pgx.Tx)(nil)
+)
