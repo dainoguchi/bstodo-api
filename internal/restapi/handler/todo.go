@@ -1,6 +1,10 @@
 package handler
 
 import (
+	"github.com/dainoguchi/bstodo-api/internal/restapi/httputil"
+	"github.com/dainoguchi/bstodo-api/internal/usecase"
+	"github.com/dainoguchi/bstodo-api/internal/usecase/input"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"time"
@@ -28,7 +32,7 @@ func (h *TodoHandler) Create(c echo.Context) error {
 	}
 
 	ctx := c.Request().Context()
-	auth0ID := "auth0ID"
+	auth0ID := httputil.GetAuth0ID(ctx)
 
 	todo, err := h.uc.CreateTodo(ctx, &input.CreateTodoInput{
 		Title:       req.Title,
