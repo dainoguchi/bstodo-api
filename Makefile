@@ -42,6 +42,7 @@ mgup:
 mgup1:
 	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASS)@127.0.0.1:5432/$(DB_NAME)?sslmode=disable" up 1
 
+
 .PHONY: mgdown
 mgdown:
 	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASS)@127.0.0.1:5432/$(DB_NAME)?sslmode=disable" down
@@ -53,3 +54,20 @@ mgdown1:
 .PHONY: mgforce
 mgforce: ## error後必須
 	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASS)@127.0.0.1:5432/$(DB_NAME)?sslmode=disable" force $(MG_VERSION)
+
+.PHONE: apply_test
+apply_test:
+	make mgup_test
+	make seed_test
+
+.PHONY: createdb_test
+createdb_test:
+	PGPASSWORD=$(DB_PASS) createdb -h 127.0.0.1 -U $(DB_USER) $(DB_NAME_TEST)
+
+.PHONY: mgup_test
+mgup_test:
+	migrate -path db/migrations -database "postgres://$(DB_USER):$(DB_PASS)@127.0.0.1:5432/$(DB_NAME_TEST)?sslmode=disable" up
+
+.PHONY: seed_test
+seed_test:
+	PGPASSWORD=$(DB_PASS) psql -h 127.0.0.1 -U $(DB_USER) -d $(DB_NAME_TEST) -f db/seeds/scenario.sql

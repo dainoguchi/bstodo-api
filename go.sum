@@ -1,5 +1,7 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
+github.com/Songmu/flextime v0.1.0 h1:sss5IALl84LbvU/cS5D1cKNd5ffT94N2BZwC+esgAJI=
+github.com/Songmu/flextime v0.1.0/go.mod h1:ofUSZ/qj7f1BfQQ6rEH4ovewJ0SZmLOjBF1xa8iE87Q=
 github.com/auth0/go-jwt-middleware/v2 v2.1.0 h1:VU4LsC3aFPoqXVyEp8EixU6FNM+ZNIjECszRTvtGQI8=
 github.com/auth0/go-jwt-middleware/v2 v2.1.0/go.mod h1:CpzcJoleayAACpv+vt0AP8/aYn5TDngsqzLapV1nM4c=
 github.com/caarlos0/env/v7 v7.0.0 h1:cyczlTd/zREwSr9ch/mwaDl7Hse7kJuUY8hvHfXu5WI=
