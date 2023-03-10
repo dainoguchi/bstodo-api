@@ -19,10 +19,8 @@ const (
 	PriorityLow  = "low"
 )
 
-type Priority string
-
-func (p Priority) Validate() bool {
-	switch p {
+func ValidatePriority(v string) bool {
+	switch v {
 	case PriorityHigh, PriorityMid, PriorityLow:
 		return true
 	default:
@@ -34,7 +32,7 @@ func isPriority(fl validator.FieldLevel) bool { //引数の型、返り値は固
 	p := fl.Field().String()
 
 	// nullの場合はdefault valueとしてmidが入る為許可する　ができない、、、
-	if Priority(p).Validate() {
+	if ValidatePriority(p) {
 		return true
 	}
 	return false
