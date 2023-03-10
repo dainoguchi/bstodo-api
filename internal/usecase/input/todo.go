@@ -20,3 +20,22 @@ func (in *CreateTodoInput) Validate() error {
 
 	return nil
 }
+
+type UpdateTodoInput struct {
+	ID      string `validate:"required,uuid4"`
+	Auth0ID string `validate:"required"`
+	// あるなら1文字以上。nilも可
+	Title       *string `validate:"omitempty,gte=1"'`
+	Priority    *string `validate:"is_priority"'`
+	Done        *bool
+	Description *string
+	DueDate     *time.Time
+}
+
+func (in *UpdateTodoInput) Validate() error {
+	if err := v.Struct(in); err != nil {
+		return err
+	}
+
+	return nil
+}
