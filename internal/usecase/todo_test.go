@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/dainoguchi/bstodo-api/internal/infra/sqlc"
 	"github.com/dainoguchi/bstodo-api/internal/usecase/input"
+	"github.com/dainoguchi/bstodo-api/test/testutil"
 	"github.com/jackc/pgx/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -13,7 +14,9 @@ import (
 
 type TodoUsecaseSuite struct {
 	suite.Suite
-	db *pgx.Conn
+	db  *pgx.Conn
+	ctx context.Context
+	now time.Time
 }
 
 func TestTodoUsecaseSuite(t *testing.T) {
@@ -21,6 +24,9 @@ func TestTodoUsecaseSuite(t *testing.T) {
 }
 
 func (s *TodoUsecaseSuite) BeforeTest(suiteName string, testName string) {
+	s.ctx = context.Background()
+	// 自国を固定
+	s.now = time.Date(2022, 5, 10, 12, 34, 56, 0, time.UTC)
 	s.db = testutil.OpenDBForTest(s.T())
 }
 
@@ -34,9 +40,9 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 	s.T().Helper()
 	s.T().Parallel()
 
-	ctx := context.Background()
-
-	tx, err := testutil.OpenDBForTest(s.T()).Begin(context.Background())
+	ctx := s.ctx
+	tx, err := testutil.OpenDBForTest(s.T()).Begin(ctx)
+	// 終了後必ずrollbackすることでdbにデータを残さない
 	s.T().Cleanup(func() { _ = tx.Rollback(ctx) })
 	if err != nil {
 		s.T().Fatalf("failed to create transaction %v", err)
@@ -61,7 +67,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Title:       "title",
 					Priority:    "high",
 					Description: testutil.ToStrP("description"),
-					DueDate:     testutil.ToTimeP(time.Now()),
+					DueDate:     testutil.ToTimeP(s.now),
 				},
 			},
 		},
@@ -73,7 +79,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Auth0ID:  "auth0id",
 					Title:    "title",
 					Priority: "high",
-					DueDate:  testutil.ToTimeP(time.Now()),
+					DueDate:  testutil.ToTimeP(s.now),
 				},
 			},
 		},
@@ -86,7 +92,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Title:       "title",
 					Priority:    "high",
 					Description: testutil.ToStrP("description"),
-					DueDate:     testutil.ToTimeP(time.Now()),
+					DueDate:     testutil.ToTimeP(s.now),
 				},
 			},
 		},
@@ -118,7 +124,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Title:       "title",
 					Priority:    "normal",
 					Description: testutil.ToStrP("description"),
-					DueDate:     testutil.ToTimeP(time.Now()),
+					DueDate:     testutil.ToTimeP(s.now),
 				},
 			},
 		},
@@ -130,7 +136,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Title:       "title",
 					Priority:    "high",
 					Description: testutil.ToStrP("description"),
-					DueDate:     testutil.ToTimeP(time.Now()),
+					DueDate:     testutil.ToTimeP(s.now),
 				},
 			},
 		},
@@ -142,7 +148,7 @@ func (s *TodoUsecaseSuite) TestCreateTodo() {
 					Title:       "",
 					Priority:    "high",
 					Description: testutil.ToStrP("description"),
-					DueDate:     testutil.ToTimeP(time.Now()),
+					DueDate:     testutil.ToTimeP(s.now),
 				},
 			},
 		},
