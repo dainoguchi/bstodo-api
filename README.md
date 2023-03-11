@@ -34,4 +34,7 @@ $ make init
 ```
 - 出来そうな気がするので4層で作ってみる
 
-## 環境変数
+## マイルストーン
+- [ ] create以外のusecaseにテスト書く
+- [ ] sql.NoRowsの処理差し込む
+- [ ] responseをusecaseレイヤで生成する = dto
