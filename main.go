@@ -65,8 +65,13 @@ func NewRouter(cfg *config.Config, db *pgx.Conn) *echo.Echo {
 
 	g := e.Group("/api/v1", am.EnsureValidToken)
 
-	uh := handler.NewTodoHandler(usecase.NewTodoUsecase(db))
-	g.POST("/todos", uh.Create)
+	th := handler.NewTodoHandler(usecase.NewTodoUsecase(db))
+
+	g.GET("/todos/:id", th.GetByID)
+	g.GET("/todos", th.List)
+	g.POST("/todos", th.Create)
+	g.PUT("/todos/:id", th.Update)
+	g.DELETE("/todos/:id", th.Delete)
 
 	return e
 }
